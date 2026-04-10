@@ -1,0 +1,140 @@
+🎗️ CancerShield AI
+AI-Powered Early Breast Cancer Screening Assistant
+
+Hackathon-ready · Computer Vision + LLM · Full-Stack · Zero-crash architecture
+
+
+📋 Overview
+CancerShield AI is a full-stack web application that analyzes medical images for breast cancer risk using a mock CNN model and provides intelligent, compassionate explanations via OpenRouter's LLM API (Mistral/Llama).
+Core flow: Upload Image → AI Prediction → LLM Explanation → Result Page → Chat Assistant → PDF Report
+
+🗂️ Project Structure
+breast-cancer-screening/
+├── backend/
+│   ├── app.py              # Flask API (predict, chat, health)
+│   ├── requirements.txt
+│   └── .env.example
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx         # Router + context (auth, dark mode, lang)
+│   │   ├── pages/
+│   │   │   ├── Landing.jsx   # Hero page with feature showcase
+│   │   │   ├── Auth.jsx      # Login / Signup (localStorage)
+│   │   │   ├── Dashboard.jsx # Drag-drop upload + patient form
+│   │   │   ├── Results.jsx   # Risk display + chat + PDF export
+│   │   │   └── History.jsx   # Past scans browser
+│   │   └── components/
+│   │       └── Navbar.jsx  # Dark mode, lang toggle, auth controls
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── tailwind.config.js
+│   └── .env.example
+└── README.md
+
+⚡ Quick Start (Windows)
+Step 1 — Backend
+Open a terminal:
+cmdcd breast-cancer-screening\backend
+pip install flask flask-cors requests python-dotenv
+python app.py
+Step 2 — Frontend
+Open a second terminal:
+cmdcd breast-cancer-screening\frontend
+npm install
+npm run dev
+Step 3 — Open the app
+http://localhost:5173
+
+🔧 Environment Variables
+backend/.env
+envOPENROUTER_API_KEY=sk-or-xxxxxxxxxxxx   # Get free at openrouter.ai
+PORT=5000
+frontend/.env
+envVITE_API_URL=http://localhost:5000      # Points to Flask backend
+
+Without the API key the app still works — it uses built-in fallback responses.
+
+
+🌐 API Endpoints
+MethodRouteDescriptionGET/healthHealth checkPOST/predictImage analysis + AI explanationPOST/chatChatbot conversation
+POST /predict
+Content-Type: multipart/form-data
+Fields:
+  image       — image file (JPG / PNG / WebP)
+  patientData — JSON string { age, familyHistory, prevScreenings, symptoms }
+
+Response:
+  {
+    risk: "Low" | "Medium" | "High",
+    probability: 12.4,
+    confidence: 89.2,
+    model_used: "MockCNN-v1",
+    explanation: "...",
+    recommendation: "...",
+    recommendation_level: "routine" | "moderate" | "urgent",
+    disclaimer: "...",
+    timestamp: "..."
+  }
+POST /chat
+jsonRequest:  { "message": "What does high risk mean?", "history": [] }
+Response: { "reply": "...", "timestamp": "..." }
+
+🤖 AI Stack
+ComponentTechnologyImage analysisMock CNN (pure Python, file-size based seed)LLM explanationsOpenRouter → mistralai/mistral-7b-instruct:freeChatbotOpenRouter, 2-message context windowFallbackHardcoded safe responses if API unavailable
+
+✨ Features
+Core
+
+🖼️ Drag-and-drop image upload with live preview
+🔬 AI risk assessment — Low / Medium / High with probability %
+💬 LLM explanation — calm, non-alarming, 4-sentence analysis
+📊 Animated result bars — probability and confidence
+🤖 Chat assistant — ask follow-up questions in real time
+📄 PDF report — downloadable with risk, explanation, recommendation
+🏥 Nearby hospitals — placeholder with ratings
+
+User Experience
+
+🔐 Auth — signup / login / demo account (localStorage)
+🌙 Dark mode — persisted toggle
+🇮🇳 Hindi / English language toggle
+📱 Responsive — mobile-friendly layout
+🕐 History — view / delete past scans (localStorage)
+
+Safety
+
+✅ Zero-crash — every endpoint has fallback responses
+⚕️ Disclaimer — "not a medical diagnosis" on every screen
+🧘 Supportive tone — AI prompts tuned for calm, non-alarming output
+
+
+🎨 UI / UX Design
+
+Theme: Soft rose-pink + white medical aesthetic
+Typography: Playfair Display (headings) · DM Sans (body)
+Animations: Framer Motion — page enters, animated bars, floating badges, chat bubbles
+Glass morphism cards with subtle shadows
+Color coding: 🟢 Low · 🟡 Medium · 🔴 High
+
+
+🔒 Fallback System
+ScenarioBehaviorAPI key missingUses hardcoded risk-based explanationsOpenRouter timeoutFalls back to template responsesInvalid imageReturns safe Medium mock resultNetwork errorFrontend catches error, uses mock result, still navigates to results
+
+🚀 Production Deployment
+bash# Build frontend
+cd frontend
+npm run build
+
+# Serve everything from Flask
+cd ../backend
+gunicorn app:app --bind 0.0.0.0:8000
+Set VITE_API_URL=https://your-backend-domain.com before building.
+
+🛠️ Troubleshooting
+ProblemFixcan't open file app.pyRun cd backend firstPillow install failsUse pip install flask flask-cors requests python-dotenv onlyFrontend won't startInstall Node.js from https://nodejs.org then re-run npm installNo AI explanationAdd OPENROUTER_API_KEY to backend/.env
+
+⚠️ Disclaimer
+CancerShield AI is for educational and informational purposes only. It does not provide medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional for medical decisions. The AI predictions are generated by a mock model and should not be used for clinical decision-making.
+
+📜 License
+MIT — Free to use, modify, and distribute for educational purposes.
